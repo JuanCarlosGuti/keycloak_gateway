@@ -1,0 +1,26 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          api-keycloak-provider:
+            issuer-uri: http://localhost:8082/realms/ForrajeriaIguazu
+        registration:
+          api-gateway-service:
+            provider: api-keycloak-provider
+            client-id: gateway-forrajeria-service
+            client-secret: sKCy4BZRY3Hvi7ZZsUi72Lha21GwHNKm
+            scope: openid
+            authorization-grant-type: authorization_code
+            redirect-uri: 'http://localhost:9090/login/oauth2/code/keycloak'
+
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: product-service
+          uri: http://localhost:8081
+          predicates: Path=/productos/**
+server:
+  port: 9090
